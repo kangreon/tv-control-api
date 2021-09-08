@@ -1,9 +1,16 @@
 import axios from "axios";
 import { JSDOM } from "jsdom";
 
+export enum DataProvider {
+  rutor = 'rutor',
+}
+
 export type TrackerResult = {
   name: string;
   id: number;
+  provider: DataProvider;
+  size: string;
+  seeders: number;
 };
 
 export class RutorInfo {
@@ -43,7 +50,6 @@ export class RutorInfo {
   }
 
   private parseSearchResult(source: string): TrackerResult[] {
-    // console.log(source);
     const document = new JSDOM(source).window.document;
     const results = document.querySelectorAll('div#content table > tbody > tr.gai, div#content table > tbody > tr.tum');
     const list: TrackerResult[] = [];
@@ -55,8 +61,19 @@ export class RutorInfo {
 
       const numberMatch = /\/(\d+)\//.exec(link.href);
       if (!numberMatch) {
-        // con
+        continue;
       }
+
+      const size = result.querySelectorAll('td')[3];
+      const seeders = result.querySelector('td span');
+
+      list.push({
+        id: Number(numberMatch[1]),
+        provider: DataProvider.rutor,
+        seeders: Number(seeders.textContent || '0'),
+        size: size.textContent,
+        name: link.textContent,
+      });
     }
 
     return list;

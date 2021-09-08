@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+  psqldb:
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: g45h4htg43wgw3
+      POSTGRES_DB: tv-control
+    volumes:
+      - ./docker/postgresql/data:/var/lib/postgresql/data
+    ports:
+      - "11231:5432"
