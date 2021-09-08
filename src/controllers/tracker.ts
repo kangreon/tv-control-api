@@ -14,3 +14,14 @@ export const find = async (req: express.Request, res: express.Response, next: ex
     next(error);
   }
 };
+
+
+export const top = async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+  try {
+    const info = new RutorInfo();
+    const result = await info.top();
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};

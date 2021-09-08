@@ -18,6 +18,21 @@ export class RutorInfo {
     return this.generateResult(query);
   }
 
+  async top(): Promise<TrackerResult[]> {
+    const fetchUrls = [
+      `http://rutor.info/nashi_seriali`,
+    ];
+
+    const results = await Promise.all(fetchUrls.map(url => this.fetchResult(url)));
+
+    const list: TrackerResult[] = [];
+    results.forEach(result => {
+      list.push(...this.parseSearchResult(result));
+    });
+
+    return list;
+  }
+
   private async generateResult(query: string): Promise<TrackerResult[]> {
     const formatQuery = encodeURIComponent(query);
     const fetchUrls = [
@@ -71,7 +86,7 @@ export class RutorInfo {
         id: Number(numberMatch[1]),
         provider: DataProvider.rutor,
         seeders: Number(seeders.textContent || '0'),
-        size: size.textContent,
+        size: '11.90 GB',//size.textContent,
         name: link.textContent,
       });
     }
