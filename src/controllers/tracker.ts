@@ -11,7 +11,8 @@ export const find = async (req: express.Request, res: express.Response, next: ex
     const result = await info.find(req.query.q as string);
     res.json(result);
   } catch (error) {
-    next(error);
+    console.error(error);
+    res.json([]);
   }
 };
 
@@ -22,6 +23,7 @@ export const top = async (req: express.Request, res: express.Response, next: exp
     const result = await info.top();
     res.json(result);
   } catch (error) {
-    next(error);
+    console.error(error);
+    res.json([]);
   }
 };
