@@ -5,4 +5,4 @@ export const trackerRouter = Router({ mergeParams: true });
 
 trackerRouter.get('/find', tracker.find);
 trackerRouter.get('/top', tracker.top);
-trackerRouter.post('/download/:fileId');
+trackerRouter.post('/download/:provider/:fileId', tracker.download);

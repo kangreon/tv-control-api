@@ -93,4 +93,16 @@ export class RutorInfo {
 
     return list;
   }
+
+  public download(fileId: number, provider: DataProvider): any {
+    try {
+      return {
+        ok: true,
+      }
+    } catch (error) {
+      return {
+        ok: true,
+      }
+    }
+  }
 }
