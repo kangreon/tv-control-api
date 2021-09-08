@@ -57,11 +57,6 @@ export class RutorInfo {
       if (!numberMatch) {
         // con
       }
-
-      list.push({
-        // name: a[2].textContent,
-        // id:
-      })
     }
 
     return list;
