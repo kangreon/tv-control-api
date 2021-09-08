@@ -1,5 +1,8 @@
 import axios from "axios";
 import { JSDOM } from "jsdom";
+import FormData from "form-data";
+
+const URL = 'http://127.0.0.1:8283/';
 
 export enum DataProvider {
   rutor = 'rutor',
@@ -94,15 +97,50 @@ export class RutorInfo {
     return list;
   }
 
-  public download(fileId: number, provider: DataProvider): any {
+  public async download(fileId: number, provider: DataProvider): Promise<any> {
     try {
-      return {
-        ok: true,
-      }
+      const magnet = await this.getMagnet(fileId);
+      console.log(magnet);
+
+      const bodyFormData = new FormData();
+      bodyFormData.append('urls', magnet);
+      bodyFormData.append('autoTMM', 'false');
+      bodyFormData.append('savepath', '/home/user/Downloads/');
+      bodyFormData.append('cookie', '');
+      bodyFormData.append('rename', '');
+      bodyFormData.append('category', '');
+      bodyFormData.append('paused', 'false');
+      bodyFormData.append('root_folder', 'true');
+      bodyFormData.append('sequentialDownload', 'true');
+      bodyFormData.append('firstLastPiecePrio', 'true');
+      bodyFormData.append('dlLimit', 'NaN');
+      bodyFormData.append('upLimit', 'NaN');
+
+      const response = await axios({
+        method: 'post',
+        url: 'http://127.0.0.1:8283/api/v2/torrents/add',
+        headers: bodyFormData.getHeaders(),
+        data: bodyFormData,
+      });
+      console.log(response.data);
     } catch (error) {
+      console.error(error.response);
       return {
         ok: true,
       }
+    }
+  }
+
+  private async getMagnet(fileId: number): Promise<string> {
+    try {
+      const response = await axios.get(`http://rutor.info/torrent/${fileId}`);
+      const source = response.data;
+
+      const extractedData = /(magnet:[^"]+)/.exec(source);
+      return extractedData[1] || '';
+    } catch (error) {
+      console.error(error);
+      return '';
     }
   }
 }
